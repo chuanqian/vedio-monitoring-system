@@ -11,7 +11,7 @@ LoginDialog::LoginDialog(QWidget *parent) : QWidget(parent)
 }
 
 void LoginDialog::createUi(){
-    QFont loginLabelFont("Microsoft YaHei",32);
+    QFont loginLabelFont("SimHei",32);
     loginLabelFont.setPixelSize(32);
     loginLabelFont.setBold(true);
     loginLabelFont.setFamily("SimHei");
@@ -21,7 +21,7 @@ void LoginDialog::createUi(){
     loginLabel->setAlignment(Qt::AlignCenter);
     loginLabel->setStyleSheet("border: 0px groove red;");
     enterPwdLabel = new QLabel("请输入密码：",this);
-    QFont enterPwdLabelFont("Microsoft YaHei",20);
+    QFont enterPwdLabelFont("SimHei",20);
     enterPwdLabelFont.setPixelSize(20);
     enterPwdLabel->setFont(enterPwdLabelFont);
     enterPwdLabel->setStyleSheet("border: 0px groove green");
@@ -30,7 +30,7 @@ void LoginDialog::createUi(){
     inputBox = new QLineEdit(this);
     inputBox->setGeometry(140,65,330,40);
     inputBox->setFont(enterPwdLabelFont);
-    QFont keyBoardFont("Microsoft YaHei",26);
+    QFont keyBoardFont("SimHei",26);
     keyBoardFont.setPixelSize(26);
     oneBtn = new QPushButton("1",this);
     oneBtn->setFont(keyBoardFont);

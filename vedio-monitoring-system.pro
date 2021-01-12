@@ -2,6 +2,19 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+LIBS += $$PWD/lib/HCCore.lib
+LIBS += $$PWD/lib/HCNetSDK.lib
+LIBS += $$PWD/lib/PlayCtrl.lib
+LIBS += $$PWD/lib/GdiPlus.lib
+
+#LIBS += $$PWD/lib/GdiPlus.lib
+#LIBS += $$PWD/lib/GdiPlus.lib
+#LIBS += $$PWD/lib/GdiPlus.lib
+
+INCLUDEPATH += $$PWD\include
+
+
+
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -18,10 +31,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     logindialog.cpp \
     main.cpp \
+    tvreal.cpp \
     vediomonitoringsystem.cpp
 
 HEADERS += \
+    StructType.h \
     logindialog.h \
+    tvreal.h \
     vediomonitoringsystem.h
 
 TRANSLATIONS += \

@@ -3,23 +3,21 @@
 #include "qpushbutton.h"
 #include "QHBoxLayout"
 #include "QDebug"
+#include "tvreal.h"
+#include "qcombobox.h"
 
 VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     : QWidget(parent)
 {
-    QFont font("ZYSong18030",12);
-    font.setPixelSize(18);
-    font.setBold(true);
-    font.setFamily("Microsoft YaHei");
-    this->setFont(font);
+
     resize(globalWidthSize,globalHeightSize);
     setWindowTitle("视频监控系统");
     layout = new QGridLayout;
     createFourView();
     //添加四个显示视频窗体
     layout->addWidget(leftTopWidget,0,0);
-    layout->addWidget(leftButtomWidget,0,1);
-    layout->addWidget(rightTopWidget,1,0);
+    layout->addWidget(leftButtomWidget,1,0);
+    layout->addWidget(rightTopWidget,0,1);
     layout->addWidget(rightButtomWidget,1,1);
     layout->setMargin(0);
     this->setLayout(layout);
@@ -46,8 +44,10 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     createCompartmentButtom();
     //创建一级菜单
     createOneMeun();
-
     connect(mainbutton,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideOneMenu);
+
+    loadCameraUtils();
+    loadVeido();
 
 }
 
@@ -59,58 +59,100 @@ void VedioMonitoringSystem::createFourView(){
 
     leftTopWidget = new QWidget;
     leftTopWidget->resize(quarterScreenWidth,quarterScreenHeight);
-    ltlTopWidget = new QWidget;
-    ltlTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    QPushButton *qPushButton1 = new QPushButton(ltlTopWidget);
-    qPushButton1->setText("视频1");
-    qPushButton1->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltlButtomWidget = new QWidget;
-    ltlButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    QPushButton *qPushButton2 = new QPushButton(ltlButtomWidget);
-    qPushButton2->setText("视频2");
-    qPushButton2->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltrTopWidget = new QWidget;
-    ltrTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    QPushButton *qPushButton3 = new QPushButton(ltrTopWidget);
-    qPushButton3->setText("视频3");
-    qPushButton3->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltrButtomWidget = new QWidget;
-    ltrButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    QPushButton *qPushButton4 = new QPushButton(ltrButtomWidget);
-    qPushButton4->setText("视频4");
-    qPushButton4->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+
+    ltltLabel = new QLabel;
+    ltltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    ltltLabel->setStyleSheet("border: 1px groove green;");
+
+    ltlbLabel = new QLabel;
+    ltlbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    ltlbLabel->setStyleSheet("border: 1px groove green;");
+
+    ltrtLabel = new QLabel;
+    ltrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    ltrtLabel->setStyleSheet("border: 1px groove green;");
+
+    ltrbLabel = new QLabel;
+    ltrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    ltrbLabel->setStyleSheet("border: 1px groove green;");
+
     ltLayout = new QGridLayout;
-    ltLayout->addWidget(ltlTopWidget,0,0);
-    ltLayout->addWidget(ltlButtomWidget,0,1);
-    ltLayout->addWidget(ltrTopWidget,1,0);
-    ltLayout->addWidget(ltrButtomWidget,1,1);
+    ltLayout->addWidget(ltltLabel,0,0);
+    ltLayout->addWidget(ltlbLabel,0,1);
+    ltLayout->addWidget(ltrtLabel,1,0);
+    ltLayout->addWidget(ltrbLabel,1,1);
     ltLayout->setMargin(0);
     leftTopWidget->setLayout(ltLayout);
 
+
+
+
     leftButtomWidget = new QWidget;
     leftButtomWidget->resize(quarterScreenWidth,quarterScreenHeight);
-    lblTopWidget = new QWidget(leftButtomWidget);
-    lblTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lblButtomWidget = new QWidget(leftButtomWidget);
-    lblButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lbrTopWidget = new QWidget(leftButtomWidget);
-    lbrTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lbrButtomWidget = new QWidget(leftButtomWidget);
-    lbrButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+
+    lbltLabel = new QLabel;
+    lbltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    lbltLabel->setStyleSheet("border: 1px groove green;");
+
+    lblbLabel = new QLabel;
+    lblbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    lblbLabel->setStyleSheet("border: 1px groove green;");
+
+    lbrtLabel = new QLabel;
+    lbrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    lbrtLabel->setStyleSheet("border: 1px groove green;");
+
+    lbrbLabel = new QLabel;
+    lbrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    lbrbLabel->setStyleSheet("border: 1px groove green;");
+
+    lbLayout = new QGridLayout;
+    lbLayout->addWidget(lbltLabel,0,0);
+    lbLayout->addWidget(lblbLabel,0,1);
+    lbLayout->addWidget(lbrtLabel,1,0);
+    lbLayout->addWidget(lbrbLabel,1,1);
+    lbLayout->setMargin(0);
+    leftButtomWidget->setLayout(lbLayout);
+
+
+
 
     rightTopWidget = new QWidget;
     rightTopWidget->resize(quarterScreenWidth,quarterScreenHeight);
-    rtlTopWidget = new QWidget(rightTopWidget);
-    rtlTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtlButtomWidget = new QWidget(rightTopWidget);
-    rtlButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtrTopWidget = new QWidget(rightTopWidget);
-    rtrTopWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtrButtomWidget = new QWidget(rightTopWidget);
-    rtrButtomWidget->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+
+    rtltLabel = new QLabel;
+    rtltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    rtltLabel->setStyleSheet("border: 1px groove green;");
+
+    rtlbLabel = new QLabel;
+    rtlbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    rtlbLabel->setStyleSheet("border: 1px groove green;");
+
+    rtrtLabel = new QLabel;
+    rtrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    rtrtLabel->setStyleSheet("border: 1px groove green;");
+
+    rtrbLabel = new QLabel;
+    rtrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
+    rtrbLabel->setStyleSheet("border: 1px groove green;");
+
+    rtLayout = new QGridLayout;
+    rtLayout->addWidget(rtltLabel,0,0);
+    rtLayout->addWidget(rtlbLabel,0,1);
+    rtLayout->addWidget(rtrtLabel,1,0);
+    rtLayout->addWidget(rtrbLabel,1,1);
+    rtLayout->setMargin(0);
+    rightTopWidget->setLayout(rtLayout);
+
+
+
+
 
     rightButtomWidget = new QWidget;
     rightButtomWidget->resize(quarterScreenWidth,quarterScreenHeight);
+    rbLabel = new QLabel(rightButtomWidget);
+    rbLabel->setGeometry(0,0,quarterScreenWidth-10,quarterScreenHeight-10);
+    rbLabel->setStyleSheet("border: 1px groove blue;");
 
 }
 
@@ -118,7 +160,7 @@ void VedioMonitoringSystem::createCompartmentButtom(){
     carBtnWidget = new QWidget(this);    
     carHeadBtn = new QPushButton(carBtnWidget);
     carHeadBtn->setText("车头");
-    carHeadBtn->setGeometry(0,0,128,50);
+    carHeadBtn->setGeometry(0,0,126,50);
     carHeadBtn->setStyleSheet("QPushButton{"
                                   "background-color:rgba(80, 100, 255,100%);"
                                   "color: white;border-radius: 10px;"
@@ -135,9 +177,14 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                               "}" // 鼠标按下的色彩
                               );
 
+    //车头点击事件
+//    connect(carHeadBtn,&QPushButton::clicked,this,)
+
+
+
     oneCarBtn = new QPushButton(carBtnWidget);
     oneCarBtn->setText("一车厢");
-    oneCarBtn->setGeometry(138,0,128,50);
+    oneCarBtn->setGeometry(128,0,126,50);
     oneCarBtn->setStyleSheet("QPushButton{"
                              "background-color:rgba(80, 100, 255,100%);"
                              "color: white;border-radius: 10px;"
@@ -155,7 +202,7 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                          );
     twoCarBtn = new QPushButton(carBtnWidget);
     twoCarBtn->setText("二车厢");
-    twoCarBtn->setGeometry(276,0,128,50);
+    twoCarBtn->setGeometry(256,0,126,50);
     twoCarBtn->setStyleSheet("QPushButton{"
                              "background-color:rgba(80, 100, 255,100%);"
                              "color: white;border-radius: 10px;"
@@ -173,7 +220,7 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                          );
     threeCarBtn = new QPushButton(carBtnWidget);
     threeCarBtn->setText("三车厢");
-    threeCarBtn->setGeometry(414,0,128,50);
+    threeCarBtn->setGeometry(384,0,126,50);
     threeCarBtn->setStyleSheet("QPushButton{"
                                "background-color:rgba(80, 100, 255,100%);"
                                "color: white;border-radius: 10px;"
@@ -192,7 +239,7 @@ void VedioMonitoringSystem::createCompartmentButtom(){
 
     rear = new QPushButton(carBtnWidget);
     rear->setText("车尾");
-    rear->setGeometry(552,0,128,50);
+    rear->setGeometry(512,0,126,50);
     rear->setStyleSheet("QPushButton{"
                             "background-color:rgba(80, 100, 255,100%);"
                             "color: white;border-radius: 10px;"
@@ -209,7 +256,7 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                         "}" // 鼠标按下的色彩
                         );
 
-    carBtnWidget->setGeometry(globalWidthSize/4,globalHeightSize-10-50,680,50);
+    carBtnWidget->setGeometry(192,globalHeightSize-10-50,640,50);
     carBtnWidget->setVisible(false);
 }
 
@@ -395,7 +442,68 @@ void VedioMonitoringSystem::showHideCar(){
     carBtnWidget->setVisible(!carBtnWidget->isVisible());
 }
 
+
 void VedioMonitoringSystem::showHideOneMenu(){
     oneMenuWidget->setVisible(!oneMenuWidget->isVisible());
+
+
+
+}
+
+void VedioMonitoringSystem::loadVeido(){
+    LoginParamter ltltloginParamter = {};
+    ltltloginParamter.ipAddress = const_cast<char*>("192.168.112.203");
+    ltltloginParamter.port = 8000;
+    ltltloginParamter.userName = const_cast<char*>("admin");
+    ltltloginParamter.password = const_cast<char*>("Aa108852");
+    long ltLoginId = ctvReal->LoginFoarmt(ltltloginParamter);
+    StartPlayParamter ltltStartPlayParamter = {};
+    ltltStartPlayParamter.loginId = ltLoginId;
+    ltltStartPlayParamter.channelNumber = 1;
+    ltltStartPlayParamter.streamNumber = 0;
+    ltltStartPlayParamter.connectionWay = 5;
+    ltltStartPlayParamter.HandleNumber = (HWND) ltltLabel->winId();
+    DWORD ltReturnId = ctvReal->StartPlay(ltltStartPlayParamter);
+    qDebug() << "打印:"<< ltReturnId;
+
+    LoginParamter rtltloginParamter = {};
+    rtltloginParamter.ipAddress = const_cast<char*>("192.168.112.204");
+    rtltloginParamter.port = 8000;
+    rtltloginParamter.userName = const_cast<char*>("admin");
+    rtltloginParamter.password = const_cast<char*>("Aa108852");
+    long rtUserId = ctvReal->LoginFoarmt(rtltloginParamter);
+    StartPlayParamter rtltStartPlayParamter = {};
+    rtltStartPlayParamter.loginId = rtUserId;
+    rtltStartPlayParamter.channelNumber = 1;
+    rtltStartPlayParamter.streamNumber = 0;
+    rtltStartPlayParamter.connectionWay = 5;
+    rtltStartPlayParamter.HandleNumber = (HWND) rtltLabel->winId();
+    DWORD rtReturnId = ctvReal->StartPlay(rtltStartPlayParamter);
+    qDebug() << "打印:"<< rtReturnId;
+
+    LoginParamter rbloginParamter = {};
+    rbloginParamter.ipAddress = const_cast<char*>("192.168.112.202");
+    rbloginParamter.port = 8000;
+    rbloginParamter.userName = const_cast<char*>("admin");
+    rbloginParamter.password = const_cast<char*>("Aa108852");
+    long rbUserId = ctvReal->LoginFoarmt(rbloginParamter);
+    StartPlayParamter rbStartPlayParamter = {};
+    rbStartPlayParamter.loginId = rbUserId;
+    rbStartPlayParamter.channelNumber = 1;
+    rbStartPlayParamter.streamNumber = 1;
+    rbStartPlayParamter.connectionWay = 5;
+    rbStartPlayParamter.HandleNumber = (HWND) rbLabel->winId();
+    DWORD rbReturnId = ctvReal->StartPlay(rbStartPlayParamter);
+    qDebug() << "打印:"<< rbReturnId;
+}
+
+void VedioMonitoringSystem::loadCameraUtils(){
+    ctvReal = new CTVReal();
+    InitializeCameraParamter initializeCameraParamter = {};
+    initializeCameraParamter.reconnectionWaitTime = 300000;
+    initializeCameraParamter.reconnectionNumber = 2;
+    initializeCameraParamter.whetherToReconnection = false;
+    initializeCameraParamter.reconnectionTimeInterval = 20000;
+    ctvReal->initialize(initializeCameraParamter);
 }
 
