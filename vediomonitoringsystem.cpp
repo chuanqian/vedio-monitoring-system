@@ -5,6 +5,7 @@
 #include "QDebug"
 #include "tvreal.h"
 #include "qcombobox.h"
+#include "logindialog.h"
 
 VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     : QWidget(parent)
@@ -15,10 +16,10 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     layout = new QGridLayout;
     createFourView();
     //添加四个显示视频窗体
-    layout->addWidget(leftTopWidget,0,0);
-    layout->addWidget(leftButtomWidget,1,0);
-    layout->addWidget(rightTopWidget,0,1);
-    layout->addWidget(rightButtomWidget,1,1);
+    layout->addWidget(ltLabel,0,0);
+    layout->addWidget(rtLabel,1,0);
+    layout->addWidget(lbLabel,0,1);
+    layout->addWidget(rbLabel,1,1);
     layout->setMargin(0);
     this->setLayout(layout);
     //初始化主菜单按钮
@@ -31,23 +32,28 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
                               "}" // 鼠标按下的色彩
                               );
-    //添加车厢按钮
-    createCompartmentButtom();
     //创建一级菜单
     createOneMeun();
+    //添加车厢按钮
+    createCompartmentButtom();
+    /**
+     * @brief connect 菜单点击链接
+     */
     connect(mainbutton,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideOneMenu);
 
-    loadCameraUtils();
-    loadVeido();
+//    /**
+//     * @brief loadCameraUtils 摄像头工具类
+//     */
+//    loadCameraUtils();
+//    /**
+//     * @brief loadVeido 加载视频
+//     */
+//    loadVeido();
 
 }
 
@@ -57,107 +63,24 @@ VedioMonitoringSystem::~VedioMonitoringSystem()
 
 void VedioMonitoringSystem::createFourView(){
 
-    leftTopWidget = new QWidget;
-    leftTopWidget->resize(quarterScreenWidth,quarterScreenHeight);
 
-    ltltLabel = new QLabel;
-    ltltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltltLabel->setStyleSheet("border: 1px groove green;");
-
-    ltlbLabel = new QLabel;
-    ltlbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltlbLabel->setStyleSheet("border: 1px groove green;");
-
-    ltrtLabel = new QLabel;
-    ltrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltrtLabel->setStyleSheet("border: 1px groove green;");
-
-    ltrbLabel = new QLabel;
-    ltrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    ltrbLabel->setStyleSheet("border: 1px groove green;");
-
-    ltLayout = new QGridLayout;
-    ltLayout->addWidget(ltltLabel,0,0);
-    ltLayout->addWidget(ltlbLabel,0,1);
-    ltLayout->addWidget(ltrtLabel,1,0);
-    ltLayout->addWidget(ltrbLabel,1,1);
-    ltLayout->setMargin(0);
-    leftTopWidget->setLayout(ltLayout);
-
-
-
-
-    leftButtomWidget = new QWidget;
-    leftButtomWidget->resize(quarterScreenWidth,quarterScreenHeight);
-
-    lbltLabel = new QLabel;
-    lbltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lbltLabel->setStyleSheet("border: 1px groove green;");
-
-    lblbLabel = new QLabel;
-    lblbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lblbLabel->setStyleSheet("border: 1px groove green;");
-
-    lbrtLabel = new QLabel;
-    lbrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lbrtLabel->setStyleSheet("border: 1px groove green;");
-
-    lbrbLabel = new QLabel;
-    lbrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    lbrbLabel->setStyleSheet("border: 1px groove green;");
-
-    lbLayout = new QGridLayout;
-    lbLayout->addWidget(lbltLabel,0,0);
-    lbLayout->addWidget(lblbLabel,0,1);
-    lbLayout->addWidget(lbrtLabel,1,0);
-    lbLayout->addWidget(lbrbLabel,1,1);
-    lbLayout->setMargin(0);
-    leftButtomWidget->setLayout(lbLayout);
-
-
-
-
-    rightTopWidget = new QWidget;
-    rightTopWidget->resize(quarterScreenWidth,quarterScreenHeight);
-
-    rtltLabel = new QLabel;
-    rtltLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtltLabel->setStyleSheet("border: 1px groove green;");
-
-    rtlbLabel = new QLabel;
-    rtlbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtlbLabel->setStyleSheet("border: 1px groove green;");
-
-    rtrtLabel = new QLabel;
-    rtrtLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtrtLabel->setStyleSheet("border: 1px groove green;");
-
-    rtrbLabel = new QLabel;
-    rtrbLabel->resize(quarterScreenWidth/2,quarterScreenHeight/2);
-    rtrbLabel->setStyleSheet("border: 1px groove green;");
-
-    rtLayout = new QGridLayout;
-    rtLayout->addWidget(rtltLabel,0,0);
-    rtLayout->addWidget(rtlbLabel,0,1);
-    rtLayout->addWidget(rtrtLabel,1,0);
-    rtLayout->addWidget(rtrbLabel,1,1);
-    rtLayout->setMargin(0);
-    rightTopWidget->setLayout(rtLayout);
-
-
-
-
-
-    rightButtomWidget = new QWidget;
-    rightButtomWidget->resize(quarterScreenWidth,quarterScreenHeight);
-    rbLabel = new QLabel(rightButtomWidget);
-    rbLabel->setGeometry(0,0,quarterScreenWidth-10,quarterScreenHeight-10);
+    ltLabel = new QLabel;
+    ltLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    ltLabel->setStyleSheet("border: 1px groove green;");
+    rtLabel = new QLabel;
+    rtLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    rtLabel->setStyleSheet("border: 1px groove green;");
+    lbLabel = new QLabel;
+    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    lbLabel->setStyleSheet("border: 1px groove green;");
+    rbLabel = new QLabel;
+    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
     rbLabel->setStyleSheet("border: 1px groove blue;");
-
 }
 
 void VedioMonitoringSystem::createCompartmentButtom(){
-    carBtnWidget = new QWidget(this);    
+    carBtnWidget = new QWidget(this);
+    carBtnWidget->setAttribute(Qt::WA_TranslucentBackground,true);
     carHeadBtn = new QPushButton(carBtnWidget);
     carHeadBtn->setText("车头");
     carHeadBtn->setGeometry(0,0,126,50);
@@ -167,10 +90,6 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -191,10 +110,6 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                              "border: 0px groove gray;"
                              "border-style: outset;"
                          "}" // 按键本色
-                         "QPushButton:hover{"
-                             "background-color:white;"
-                             " color: black;"
-                         "}"  // 鼠标停放时的色彩
                          "QPushButton:pressed{"
                              "background-color:rgba(0, 255, 0, 50%);"
                              " border-style: inset; "
@@ -209,10 +124,6 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                              "border: 0px groove gray;"
                              "border-style: outset;"
                          "}" // 按键本色
-                         "QPushButton:hover{"
-                             "background-color:white;"
-                             " color: black;"
-                         "}"  // 鼠标停放时的色彩
                          "QPushButton:pressed{"
                              "background-color:rgba(0, 255, 0, 50%);"
                              " border-style: inset; "
@@ -227,10 +138,6 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                                "border: 0px groove gray;"
                                "border-style: outset;"
                            "}" // 按键本色
-                           "QPushButton:hover{"
-                               "background-color:white;"
-                               " color: black;"
-                           "}"  // 鼠标停放时的色彩
                            "QPushButton:pressed{"
                                "background-color:rgba(0, 255, 0, 50%);"
                                " border-style: inset; "
@@ -246,10 +153,6 @@ void VedioMonitoringSystem::createCompartmentButtom(){
                             "border: 0px groove gray;"
                             "border-style: outset;"
                         "}" // 按键本色
-                        "QPushButton:hover{"
-                            "background-color:white;"
-                            " color: black;"
-                        "}"  // 鼠标停放时的色彩
                         "QPushButton:pressed{"
                             "background-color:rgba(0, 255, 0, 50%);"
                             " border-style: inset; "
@@ -262,9 +165,15 @@ void VedioMonitoringSystem::createCompartmentButtom(){
 
 void VedioMonitoringSystem::createOneMeun(){
     oneMenuWidget = new QWidget(this);
+    // 设置透明度
+    oneMenuWidget->setAttribute(Qt::WA_TranslucentBackground, true);
 
     loginBtn = new QPushButton(oneMenuWidget);
-    loginBtn->setText(tr("登录"));
+    if(loginFlag){
+        loginBtn->setText(tr("已登录"));
+    }else{
+        loginBtn->setText(tr("登录"));
+    }
     loginBtn->setGeometry(0,0,80,50);
     loginBtn->setStyleSheet("QPushButton{"
                                   "background-color:rgba(80, 100, 255,100%);"
@@ -272,15 +181,13 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
                               "}" // 鼠标按下的色彩
                               );
+
+    connect(loginBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::loginClicked);
 
     logoutBtn = new QPushButton(oneMenuWidget);
     logoutBtn->setText(tr("注销"));
@@ -291,10 +198,6 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -310,10 +213,6 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -329,10 +228,6 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -348,10 +243,6 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -370,10 +261,6 @@ void VedioMonitoringSystem::createOneMeun(){
                                   "border: 0px groove gray;"
                                   "border-style: outset;"
                               "}" // 按键本色
-                              "QPushButton:hover{"
-                                  "background-color:white;"
-                                  " color: black;"
-                              "}"  // 鼠标停放时的色彩
                               "QPushButton:pressed{"
                                   "background-color:rgba(0, 255, 0, 50%);"
                                   " border-style: inset; "
@@ -389,10 +276,6 @@ void VedioMonitoringSystem::createOneMeun(){
                               "border: 0px groove gray;"
                               "border-style: outset;"
                           "}" // 按键本色
-                          "QPushButton:hover{"
-                              "background-color:white;"
-                              " color: black;"
-                          "}"  // 鼠标停放时的色彩
                           "QPushButton:pressed{"
                               "background-color:rgba(0, 255, 0, 50%);"
                               " border-style: inset; "
@@ -412,10 +295,6 @@ void VedioMonitoringSystem::showHideCar(){
                                 "border: 0px groove gray;"
                                 "border-style: outset;"
                             "}" // 按键本色
-                            "QPushButton:hover{"
-                                "background-color:white;"
-                                " color: black;"
-                            "}"  // 鼠标停放时的色彩
                             "QPushButton:pressed{"
                                 "background-color:rgba(0, 255, 0, 50%);"
                                 " border-style: inset; "
@@ -429,10 +308,6 @@ void VedioMonitoringSystem::showHideCar(){
                                 "border: 0px groove gray;"
                                 "border-style: outset;"
                             "}" // 按键本色
-                            "QPushButton:hover{"
-                                "background-color:white;"
-                                " color: black;"
-                            "}"  // 鼠标停放时的色彩
                             "QPushButton:pressed{"
                                 "background-color:rgba(0, 255, 0, 50%);"
                                 " border-style: inset; "
@@ -445,41 +320,70 @@ void VedioMonitoringSystem::showHideCar(){
 
 void VedioMonitoringSystem::showHideOneMenu(){
     oneMenuWidget->setVisible(!oneMenuWidget->isVisible());
+}
 
+void VedioMonitoringSystem::loginClicked(){
+    if(loginBtnFlag){
+        // 已经登录过
+    }else{
+        // 未登录
+        // 初始化登录框对象
+        loginDialog = new LoginDialog();
+        loginDialog->show();
+        loginDialog->deleteLater();
+        loginDialog->show();
+    }
 
-
+//    loginDialog->close();
 }
 
 void VedioMonitoringSystem::loadVeido(){
-    LoginParamter ltltloginParamter = {};
-    ltltloginParamter.ipAddress = const_cast<char*>("192.168.112.203");
-    ltltloginParamter.port = 8000;
-    ltltloginParamter.userName = const_cast<char*>("admin");
-    ltltloginParamter.password = const_cast<char*>("Aa108852");
-    long ltLoginId = ctvReal->LoginFoarmt(ltltloginParamter);
-    StartPlayParamter ltltStartPlayParamter = {};
-    ltltStartPlayParamter.loginId = ltLoginId;
-    ltltStartPlayParamter.channelNumber = 1;
-    ltltStartPlayParamter.streamNumber = 0;
-    ltltStartPlayParamter.connectionWay = 5;
-    ltltStartPlayParamter.HandleNumber = (HWND) ltltLabel->winId();
-    DWORD ltReturnId = ctvReal->StartPlay(ltltStartPlayParamter);
+    LoginParamter ltloginParamter = {};
+    ltloginParamter.ipAddress = const_cast<char*>("192.168.112.202");
+    ltloginParamter.port = 8000;
+    ltloginParamter.userName = const_cast<char*>("admin");
+    ltloginParamter.password = const_cast<char*>("Aa108852");
+    long ltLoginId = ctvReal->LoginFoarmt(ltloginParamter);
+    StartPlayParamter ltStartPlayParamter = {};
+    ltStartPlayParamter.loginId = ltLoginId;
+    ltStartPlayParamter.channelNumber = 1;
+    ltStartPlayParamter.streamNumber = 1;
+    ltStartPlayParamter.connectionWay = 5;
+    ltStartPlayParamter.HandleNumber = (HWND) ltLabel->winId();
+    DWORD ltReturnId = ctvReal->StartPlay(ltStartPlayParamter);
     qDebug() << "打印:"<< ltReturnId;
 
-    LoginParamter rtltloginParamter = {};
-    rtltloginParamter.ipAddress = const_cast<char*>("192.168.112.204");
-    rtltloginParamter.port = 8000;
-    rtltloginParamter.userName = const_cast<char*>("admin");
-    rtltloginParamter.password = const_cast<char*>("Aa108852");
-    long rtUserId = ctvReal->LoginFoarmt(rtltloginParamter);
-    StartPlayParamter rtltStartPlayParamter = {};
-    rtltStartPlayParamter.loginId = rtUserId;
-    rtltStartPlayParamter.channelNumber = 1;
-    rtltStartPlayParamter.streamNumber = 0;
-    rtltStartPlayParamter.connectionWay = 5;
-    rtltStartPlayParamter.HandleNumber = (HWND) rtltLabel->winId();
-    DWORD rtReturnId = ctvReal->StartPlay(rtltStartPlayParamter);
+    LoginParamter rtloginParamter = {};
+    rtloginParamter.ipAddress = const_cast<char*>("192.168.112.203");
+    rtloginParamter.port = 8000;
+    rtloginParamter.userName = const_cast<char*>("admin");
+    rtloginParamter.password = const_cast<char*>("Aa108852");
+    long rtUserId = ctvReal->LoginFoarmt(rtloginParamter);
+    StartPlayParamter rtStartPlayParamter = {};
+    rtStartPlayParamter.loginId = rtUserId;
+    rtStartPlayParamter.channelNumber = 1;
+    rtStartPlayParamter.streamNumber = 0;
+    rtStartPlayParamter.connectionWay = 5;
+    rtStartPlayParamter.HandleNumber = (HWND) rtLabel->winId();
+    DWORD rtReturnId = ctvReal->StartPlay(rtStartPlayParamter);
     qDebug() << "打印:"<< rtReturnId;
+
+    LoginParamter lbloginParamter = {};
+    lbloginParamter.ipAddress = const_cast<char*>("192.168.112.204");
+    lbloginParamter.port = 8000;
+    lbloginParamter.userName = const_cast<char*>("admin");
+    lbloginParamter.password = const_cast<char*>("Aa108852");
+    long lbLoginId = ctvReal->LoginFoarmt(lbloginParamter);
+    StartPlayParamter lbStartPlayParamter = {};
+    lbStartPlayParamter.loginId = lbLoginId;
+    lbStartPlayParamter.channelNumber = 1;
+    lbStartPlayParamter.streamNumber = 0;
+    lbStartPlayParamter.connectionWay = 5;
+    lbStartPlayParamter.HandleNumber = (HWND) lbLabel->winId();
+    DWORD lbReturnId = ctvReal->StartPlay(lbStartPlayParamter);
+    qDebug() << "打印:"<< lbReturnId;
+
+
 
     LoginParamter rbloginParamter = {};
     rbloginParamter.ipAddress = const_cast<char*>("192.168.112.202");

@@ -12,6 +12,7 @@
 #include "qlabel.h"
 #include "qopenglwidget.h"
 #include "qcombobox.h"
+#include "logindialog.h"
 
 class VedioMonitoringSystem : public QWidget
 {
@@ -50,8 +51,21 @@ public slots:
      */
     void showHideOneMenu();
 
+    /**
+     * @brief loginClicked 登录点击事件
+     */
+    void loginClicked();
+
 
 private:
+    /**
+     * @brief loginBtnFlag 登录按钮标志
+     * @brief loginFlag 登录标志
+     * @brief loginDialog 登录框对象
+     */
+    bool loginBtnFlag = false;
+    bool loginFlag = false;
+    LoginDialog *loginDialog;
     /**
      * @brief ctvReal 摄像头工具类对象
      */
@@ -72,65 +86,20 @@ private:
     int globalHeightSize = 768;
     int quarterScreenWidth = 512;
     int quarterScreenHeight = 384;
-    /**
-     * @brief leftTopWidget 左上角
-     * @brief leftButtomWidget 左下角
-     * @brief rightTopWidget 右上角
-     * @brief rightButtomWidget 右下角
-     * @brief layout 主页面布局方式
-     */
-    QWidget *leftTopWidget;
-    QWidget *leftButtomWidget;
-    QWidget *rightTopWidget;
-    QWidget *rightButtomWidget;
+
     QGridLayout *layout;
 
     /**
-     * @brief ltLayout 左上角视频布局
-     * @brief lbLayout 左下角视频布局
-     * @brief rtLayout 右上角视频布局
-     */
-    QGridLayout *ltLayout;
-    QGridLayout *lbLayout;
-    QGridLayout *rtLayout;
-
-    /**
-     * @brief ltltLabel 视频1左上角label
-     * @brief lbltLabel 视频1左下角label
-     * @brief rtltLabel 视频1右上角label
-     * @brief rbltLabel 视频1右下角label
-     */
-    QLabel *ltltLabel;
-    QLabel *ltlbLabel;
-    QLabel *ltrtLabel;
-    QLabel *ltrbLabel;
-
-    /**
-     * @brief rtltLabel 视频2左上角label
-     * @brief rtlbLabel 视频2左下角label
-     * @brief rtrtLabel 视频2右上角label
-     * @brief rtrbLabel 视频2右下角label
-     */
-    QLabel *rtltLabel;
-    QLabel *rtlbLabel;
-    QLabel *rtrtLabel;
-    QLabel *rtrbLabel;
-
-    /**
-     * @brief lbltLabel 视频3左上角label
-     * @brief lblbLabel 视频3左下角label
-     * @brief lbrtLabel 视频3右上角label
-     * @brief lbrbLabel 视频3右下角label
-     */
-    QLabel *lbltLabel;
-    QLabel *lblbLabel;
-    QLabel *lbrtLabel;
-    QLabel *lbrbLabel;
-
-    /**
+     * @brief ltLabel 左上角视频
+     * @brief rtLabel 右上角视频
+     * @brief lbLabel 左下角视频
      * @brief rbLabel 右下角视频
      */
+    QLabel *ltLabel;
+    QLabel *rtLabel;
+    QLabel *lbLabel;
     QLabel *rbLabel;
+
 
     /**
      * @brief mainbutton 主菜单按钮

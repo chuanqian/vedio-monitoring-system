@@ -1,13 +1,26 @@
 #include "logindialog.h"
 #include "qpushbutton.h"
+#include "qdebug.h"
 
 LoginDialog::LoginDialog(QWidget *parent) : QWidget(parent)
 {
     this->setWindowTitle("登录弹框");
     this->resize(480,410);
     this->setStyleSheet("background-color: white");
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     createUi();
+    connect(determineBtn,&QPushButton::clicked,this,&LoginDialog::confirmClicked);
+    connect(cancelBtn,&QPushButton::clicked,this,&LoginDialog::cancalClicked);
 
+}
+
+void LoginDialog::cancalClicked(){
+    this->close();
+    this->createUi();
+}
+
+void LoginDialog::confirmClicked(){
+    this->close();
 }
 
 void LoginDialog::createUi(){

@@ -15,6 +15,13 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
     void createUi();
 
+public slots:
+    /**
+     * @brief confirmClicked 确认点击事件
+     * @brief cancalClicked 取消点击事件
+     */
+    void confirmClicked();
+    void cancalClicked();
 
 private:
     /**
