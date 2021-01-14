@@ -34,6 +34,10 @@ public:
      * @brief createOneMeun 创建一级菜单
      */
     void createOneMeun();
+    /**
+     * @brief createUi 创建登录非模态框
+     */
+    void createUi();
 
     /**
      * @brief loadVeido 加载视频
@@ -41,6 +45,9 @@ public:
     void loadVeido();
 
     void loadCameraUtils();
+
+    void setInputPwd(QString strPwd);
+
 public slots:
     /**
      * @brief showHideCar 车厢显示和隐藏槽
@@ -50,22 +57,29 @@ public slots:
      * @brief showHideOneMenu 一级菜单显示隐藏槽
      */
     void showHideOneMenu();
+    /**
+     * @brief getInputPwd 获取数字键盘的密码
+     */
+    void getInputPwd();
 
     /**
-     * @brief loginClicked 登录点击事件
+     * @brief cancalLoginEvent 登录点击取消事件
      */
-    void loginClicked();
+    void cancalLoginEvent();
+
+    /**
+     * @brief determineLoginEvent 登录点击确认事件
+     */
+    void determineLoginEvent();
 
 
 private:
     /**
      * @brief loginBtnFlag 登录按钮标志
      * @brief loginFlag 登录标志
-     * @brief loginDialog 登录框对象
      */
     bool loginBtnFlag = false;
     bool loginFlag = false;
-    LoginDialog *loginDialog;
     /**
      * @brief ctvReal 摄像头工具类对象
      */
@@ -140,7 +154,46 @@ private:
     QPushButton *replayBtn;
     QPushButton *setBtn;
     QPushButton *faultFuidanceBtn;
-//    BOOL m_IsPaint;
+
+    /**
+     * @brief loginDialog 登录框对象
+     */
+    QDialog *loginDialog;
+    /**
+     * @brief loginLabel 登录标题
+     * @brief enterPwdLabel 输入密码标签
+     * @brief inputBox 输入框
+     * @brief zeroBtn 0
+     * @brief oneBtn 1
+     * @brief twoBtn 2
+     * @brief threeBtn 3
+     * @brief fourBtn 4
+     * @brief fiveBtn 5
+     * @brief sixBtn 6
+     * @brief servenBtn 7
+     * @brief eightBtn 8
+     * @brief nineBtn 9
+     * @brief errorBtn 删除
+     * @brief determineBtn 确定
+     * @brief cancelBtn 取消
+     */
+    QLabel *loginLabel;
+    QLabel *enterPwdLabel;
+    QLineEdit *inputBox;
+    QPushButton *zeroBtn;
+    QPushButton *oneBtn;
+    QPushButton *twoBtn;
+    QPushButton *threeBtn;
+    QPushButton *fourBtn;
+    QPushButton *fiveBtn;
+    QPushButton *sixBtn;
+    QPushButton *servenBtn;
+    QPushButton *eightBtn;
+    QPushButton *nineBtn;
+    QPushButton *errorBtn;
+    QPushButton *determineBtn;
+    QPushButton *cancelBtn;
+    QPushButton *spaceBtn;
 
 };
 #endif // VEDIOMONITORINGSYSTEM_H

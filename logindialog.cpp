@@ -15,8 +15,7 @@ LoginDialog::LoginDialog(QWidget *parent) : QWidget(parent)
 }
 
 void LoginDialog::cancalClicked(){
-    this->close();
-    this->createUi();
+    delete(this);
 }
 
 void LoginDialog::confirmClicked(){
