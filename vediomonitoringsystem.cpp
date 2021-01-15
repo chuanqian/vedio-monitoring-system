@@ -8,6 +8,7 @@
 #include "logindialog.h"
 #include "qdialog.h"
 #include "qmessagebox.h"
+#include "qapplication.h"
 
 VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     : QWidget(parent)
@@ -15,6 +16,8 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
 
     resize(globalWidthSize,globalHeightSize);
     setWindowTitle("视频监控系统");
+    setAttribute(Qt::WA_DeleteOnClose,true);
+
     layout = new QGridLayout;
     createFourView();
     //添加四个显示视频窗体
@@ -25,20 +28,9 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     layout->setMargin(0);
     this->setLayout(layout);
     //初始化主菜单按钮
-    mainbutton = new QPushButton(this);
+    mainbutton = new SystemPushButton(this);
     mainbutton->setGeometry(10,globalHeightSize-10-50,80,50);
     mainbutton->setText("菜单");
-    mainbutton->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
     //创建一级菜单
     createOneMeun();
     //添加车厢按钮
@@ -59,264 +51,17 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
 
 }
 
-VedioMonitoringSystem::~VedioMonitoringSystem()
-{
-}
-
-void VedioMonitoringSystem::createFourView(){
-
-
-    ltLabel = new QLabel;
-    ltLabel->resize(quarterScreenWidth,quarterScreenHeight);
-    ltLabel->setStyleSheet("border: 1px groove green;");
-    rtLabel = new QLabel;
-    rtLabel->resize(quarterScreenWidth,quarterScreenHeight);
-    rtLabel->setStyleSheet("border: 1px groove green;");
-    lbLabel = new QLabel;
-    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
-    lbLabel->setStyleSheet("border: 1px groove green;");
-    rbLabel = new QLabel;
-    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
-    rbLabel->setStyleSheet("border: 1px groove blue;");
-}
-
-void VedioMonitoringSystem::createCompartmentButtom(){
-    carBtnWidget = new QWidget(this);
-    carBtnWidget->setAttribute(Qt::WA_TranslucentBackground,true);
-    carHeadBtn = new QPushButton(carBtnWidget);
-    carHeadBtn->setText("车头");
-    carHeadBtn->setGeometry(0,0,126,50);
-    carHeadBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-
-    //车头点击事件
-//    connect(carHeadBtn,&QPushButton::clicked,this,)
-
-
-
-    oneCarBtn = new QPushButton(carBtnWidget);
-    oneCarBtn->setText("一车厢");
-    oneCarBtn->setGeometry(128,0,126,50);
-    oneCarBtn->setStyleSheet("QPushButton{"
-                             "background-color:rgba(80, 100, 255,100%);"
-                             "color: white;border-radius: 10px;"
-                             "border: 0px groove gray;"
-                             "border-style: outset;"
-                         "}" // 按键本色
-                         "QPushButton:pressed{"
-                             "background-color:rgba(0, 255, 0, 50%);"
-                             " border-style: inset; "
-                         "}" // 鼠标按下的色彩
-                         );
-    twoCarBtn = new QPushButton(carBtnWidget);
-    twoCarBtn->setText("二车厢");
-    twoCarBtn->setGeometry(256,0,126,50);
-    twoCarBtn->setStyleSheet("QPushButton{"
-                             "background-color:rgba(80, 100, 255,100%);"
-                             "color: white;border-radius: 10px;"
-                             "border: 0px groove gray;"
-                             "border-style: outset;"
-                         "}" // 按键本色
-                         "QPushButton:pressed{"
-                             "background-color:rgba(0, 255, 0, 50%);"
-                             " border-style: inset; "
-                         "}" // 鼠标按下的色彩
-                         );
-    threeCarBtn = new QPushButton(carBtnWidget);
-    threeCarBtn->setText("三车厢");
-    threeCarBtn->setGeometry(384,0,126,50);
-    threeCarBtn->setStyleSheet("QPushButton{"
-                               "background-color:rgba(80, 100, 255,100%);"
-                               "color: white;border-radius: 10px;"
-                               "border: 0px groove gray;"
-                               "border-style: outset;"
-                           "}" // 按键本色
-                           "QPushButton:pressed{"
-                               "background-color:rgba(0, 255, 0, 50%);"
-                               " border-style: inset; "
-                           "}" // 鼠标按下的色彩
-                           );
-
-    rear = new QPushButton(carBtnWidget);
-    rear->setText("车尾");
-    rear->setGeometry(512,0,126,50);
-    rear->setStyleSheet("QPushButton{"
-                            "background-color:rgba(80, 100, 255,100%);"
-                            "color: white;border-radius: 10px;"
-                            "border: 0px groove gray;"
-                            "border-style: outset;"
-                        "}" // 按键本色
-                        "QPushButton:pressed{"
-                            "background-color:rgba(0, 255, 0, 50%);"
-                            " border-style: inset; "
-                        "}" // 鼠标按下的色彩
-                        );
-
-    carBtnWidget->setGeometry(192,globalHeightSize-10-50,640,50);
-    carBtnWidget->setVisible(false);
-}
-
-void VedioMonitoringSystem::createOneMeun(){
-    oneMenuWidget = new QWidget(this);
-    // 设置透明度
-    oneMenuWidget->setAttribute(Qt::WA_TranslucentBackground, true);
-
-    loginBtn = new QPushButton(oneMenuWidget);
-    loginBtn->setText(tr("登录"));
-    loginBtn->setGeometry(0,0,80,50);
-    loginBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-
-    connect(loginBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
-
-    logoutBtn = new QPushButton(oneMenuWidget);
-    logoutBtn->setText(tr("注销"));
-    logoutBtn->setGeometry(0,60,80,50);
-    logoutBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-    connect(logoutBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
-
-    roundRobinBtn = new QPushButton(oneMenuWidget);
-    roundRobinBtn->setText(tr("轮巡"));
-    roundRobinBtn->setGeometry(0,120,80,50);
-    roundRobinBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-
-    faultFuidanceBtn = new QPushButton(oneMenuWidget);
-    faultFuidanceBtn->setText(tr("故障指导"));
-    faultFuidanceBtn->setGeometry(0,180,80,50);
-    faultFuidanceBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-
-    carBtn = new QPushButton(oneMenuWidget);
-    carBtn->setText(tr("车厢"));
-    carBtn->setGeometry(0,240,80,50);
-    carBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-    //车厢显示隐藏事件
-    //void(VedioMonitoringSystem::*oneMenuCarChange)(QPushButton) = &VedioMonitoringSystem::showHideCar;
-    connect(carBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
-
-    replayBtn = new QPushButton(oneMenuWidget);
-    replayBtn->setText(tr("回放"));
-    replayBtn->setGeometry(0,300,80,50);
-    replayBtn->setStyleSheet("QPushButton{"
-                                  "background-color:rgba(80, 100, 255,100%);"
-                                  "color: white;border-radius: 10px;"
-                                  "border: 0px groove gray;"
-                                  "border-style: outset;"
-                              "}" // 按键本色
-                              "QPushButton:pressed{"
-                                  "background-color:rgba(0, 255, 0, 50%);"
-                                  " border-style: inset; "
-                              "}" // 鼠标按下的色彩
-                              );
-
-    setBtn = new QPushButton(oneMenuWidget);
-    setBtn->setText(tr("设置"));
-    setBtn->setChecked(true);
-    setBtn->toggle();
-    setBtn->setGeometry(0,360,80,50);
-    setBtn->setStyleSheet("QPushButton{"
-                              "background-color:rgba(80, 100, 255,100%);"
-                              "color: white;border-radius: 10px;"
-                              "border: 0px groove gray;"
-                              "border-style: outset;"
-                          "}" // 按键本色
-                          "QPushButton:pressed{"
-                              "background-color:rgba(0, 255, 0, 50%);"
-                              " border-style: inset; "
-                          "}" // 鼠标按下的色彩
-                          );
-
-    oneMenuWidget->setGeometry(10,globalHeightSize-10-50-430,80,420);
-    oneMenuWidget->setVisible(false);
+VedioMonitoringSystem::~VedioMonitoringSystem(){
 }
 
 void VedioMonitoringSystem::showHideCar(){
-    QPushButton* oneEventBtn = qobject_cast<QPushButton*>(sender());
+    SystemPushButton* oneEventBtn = qobject_cast<SystemPushButton*>(sender());
     QString oneEventBtnText = oneEventBtn->text();
     if(oneEventBtnText=="车厢"){
         if(!carFlag){
             carFlag = 1;
-            oneEventBtn->setStyleSheet("QPushButton{"
-                                    "background-color:rgba(80, 100, 255,100%);"
-                                    "color: white;border-radius: 10px;"
-                                    "border: 0px groove gray;"
-                                    "border-style: outset;"
-                                "}" // 按键本色
-                                "QPushButton:pressed{"
-                                    "background-color:rgba(0, 255, 0, 50%);"
-                                    " border-style: inset; "
-                                "}" // 鼠标按下的色彩
-                                );
         }else{
             carFlag = 0;
-            oneEventBtn->setStyleSheet("QPushButton{"
-                                    "background-color:rgba(255, 191, 0,100%);"
-                                    "color: white;border-radius: 10px;"
-                                    "border: 0px groove gray;"
-                                    "border-style: outset;"
-                                "}" // 按键本色
-                                "QPushButton:pressed{"
-                                    "background-color:rgba(0, 255, 0, 50%);"
-                                    " border-style: inset; "
-                                "}" // 鼠标按下的色彩
-                                );
         }
         carBtnWidget->setVisible(!carBtnWidget->isVisible());
     }else if(oneEventBtnText=="登录"){
@@ -328,273 +73,28 @@ void VedioMonitoringSystem::showHideCar(){
             loginDialog->setAttribute(Qt::WA_DeleteOnClose);
             loginDialog->exec();
         }
+    }else if(oneEventBtnText=="已登录"){
+        QMessageBox::information(this,"登录提示","已登录!");
     }else if(oneEventBtnText == "注销"){
         if(loginBtn->text()=="登录"){
             QMessageBox::information(this,"登录提示","未登录");
         }else{
-            oneEventBtn->setEnabled(false);
-            loginBtn->setText("登录");
-            loginBtn->setEnabled(true);
+             if(QMessageBox::Ok == QMessageBox::question(this,"是否注销","是否确认注销",QMessageBox::Ok | QMessageBox::No,QMessageBox::Ok)){
+                 loginBtnFlag = false;
+                 delete(twoMenuWidget);
+                 loginBtn->setText("登录");
+             }
+        }
+    }else if(oneEventBtnText=="退出"){
+        if(QMessageBox::Ok == QMessageBox::question(this,"是否退出","确认退出系统？",QMessageBox::Ok | QMessageBox::No,QMessageBox::Ok)){
+
         }
     }
 
 }
 
-
-void VedioMonitoringSystem::showHideOneMenu(){
-    oneMenuWidget->setVisible(!oneMenuWidget->isVisible());
-}
-
-void VedioMonitoringSystem::createUi(){
-
-    QFont loginLabelFont("SimHei",32);
-    loginLabelFont.setPixelSize(32);
-    loginLabelFont.setBold(true);
-    loginLabelFont.setFamily("SimHei");
-    loginLabel = new QLabel("登录",loginDialog);
-    loginLabel->setFont(loginLabelFont);
-    loginLabel->setGeometry(0,5,480,60);
-    loginLabel->setAlignment(Qt::AlignCenter);
-    loginLabel->setStyleSheet("border: 0px groove red;");
-    enterPwdLabel = new QLabel("请输入密码：",loginDialog);
-    QFont enterPwdLabelFont("SimHei",20);
-    enterPwdLabelFont.setPixelSize(20);
-    enterPwdLabel->setFont(enterPwdLabelFont);
-    enterPwdLabel->setStyleSheet("border: 0px groove green");
-    enterPwdLabel->setAlignment(Qt::AlignCenter);
-    enterPwdLabel->setGeometry(0,65,140,40);
-    inputBox = new QLineEdit(loginDialog);
-    inputBox->setGeometry(140,65,330,40);
-    inputBox->setFont(enterPwdLabelFont);
-    QFont keyBoardFont("SimHei",26);
-    keyBoardFont.setPixelSize(26);
-    oneBtn = new QPushButton("1",loginDialog);
-    oneBtn->setFont(keyBoardFont);
-    oneBtn->setGeometry(10,125,152,50);
-    oneBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(oneBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    twoBtn = new QPushButton("2",loginDialog);
-    twoBtn->setFont(keyBoardFont);
-    twoBtn->setGeometry(164,125,152,50);
-    twoBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(twoBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    threeBtn = new QPushButton("3",loginDialog);
-    threeBtn->setFont(keyBoardFont);
-    threeBtn->setGeometry(318,125,152,50);
-    threeBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(threeBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    fourBtn = new QPushButton("4",loginDialog);
-    fourBtn->setFont(keyBoardFont);
-    fourBtn->setGeometry(10,177,152,50);
-    fourBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(fourBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    fiveBtn = new QPushButton("5",loginDialog);
-    fiveBtn->setFont(keyBoardFont);
-    fiveBtn->setGeometry(164,177,152,50);
-    fiveBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(fiveBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    sixBtn = new QPushButton("6",loginDialog);
-    sixBtn->setFont(keyBoardFont);
-    sixBtn->setGeometry(318,177,152,50);
-    sixBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(sixBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    servenBtn = new QPushButton("7",loginDialog);
-    servenBtn->setFont(keyBoardFont);
-    servenBtn->setGeometry(10,229,152,50);
-    servenBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(servenBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    eightBtn = new QPushButton("8",loginDialog);
-    eightBtn->setFont(keyBoardFont);
-    eightBtn->setGeometry(164,229,152,50);
-    eightBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(eightBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    nineBtn = new QPushButton("9",loginDialog);
-    nineBtn->setFont(keyBoardFont);
-    nineBtn->setGeometry(318,229,152,50);
-    nineBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(nineBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    spaceBtn = new QPushButton("",loginDialog);
-    spaceBtn->setFont(keyBoardFont);
-    spaceBtn->setEnabled(false);
-    spaceBtn->setGeometry(10,281,152,50);
-    spaceBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    zeroBtn = new QPushButton("0",loginDialog);
-    zeroBtn->setFont(keyBoardFont);
-    zeroBtn->setGeometry(164,281,152,50);
-    zeroBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(zeroBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    errorBtn = new QPushButton("<",loginDialog);
-    errorBtn->setFont(keyBoardFont);
-    errorBtn->setGeometry(318,281,152,50);
-    errorBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(errorBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
-
-    determineBtn = new QPushButton("确定",loginDialog);
-    determineBtn->setFont(enterPwdLabelFont);
-    determineBtn->setGeometry(30,345,160,50);
-    determineBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(determineBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::determineLoginEvent);
-
-    cancelBtn = new QPushButton("取消",loginDialog);
-    cancelBtn->setFont(enterPwdLabelFont);
-    cancelBtn->setGeometry(290,345,160,50);
-    cancelBtn->setStyleSheet("QPushButton{"
-                          "background-color:rgba(255,255,255,100%);"
-                          "color: black;border-radius: 10px;"
-                          "border: 1px groove black;"
-                          "border-style: outset;"
-                      "}" // 按键本色
-                      "QPushButton:pressed{"
-                          "background-color:rgba(0, 64, 255, 100%);"
-                          " border-style: inset; "
-                      "}" // 鼠标按下的色彩
-                      );
-    connect(cancelBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::cancalLoginEvent);
-
-}
-
 void VedioMonitoringSystem::getInputPwd(){
-    QPushButton* loginDialogBtn = qobject_cast<QPushButton*>(sender());
+    LoginButton* loginDialogBtn = qobject_cast<LoginButton*>(sender());
     QString strPwd = loginDialogBtn->text();
     if(strPwd != " "){
         setInputPwd(strPwd);
@@ -625,13 +125,21 @@ void VedioMonitoringSystem::cancalLoginEvent(){
 void VedioMonitoringSystem::determineLoginEvent(){
     if(inputBox->text() == "123456"){
         loginBtn->setText("已登录");
-        loginBtn->setEnabled(false);
-        logoutBtn->setEnabled(true);
+        loginBtnFlag = true;
+        createTwoMenu();
+        twoMenuWidget->setVisible(!twoMenuWidget->isVisible());
         QMessageBox::information(this,"登录成功","登录成功");
+        delete(loginDialog);
     }else{
         QMessageBox::critical(this,"密码错误！","登录失败");
     }
-    delete(loginDialog);
+}
+
+void VedioMonitoringSystem::showHideOneMenu(){
+    if(loginBtnFlag){
+        twoMenuWidget->setVisible(!twoMenuWidget->isVisible());
+    }
+    oneMenuWidget->setVisible(!oneMenuWidget->isVisible());
 }
 
 void VedioMonitoringSystem::loadVeido(){
@@ -706,5 +214,256 @@ void VedioMonitoringSystem::loadCameraUtils(){
     initializeCameraParamter.whetherToReconnection = false;
     initializeCameraParamter.reconnectionTimeInterval = 20000;
     ctvReal->initialize(initializeCameraParamter);
+}
+
+void VedioMonitoringSystem::createFourView(){
+
+
+    ltLabel = new QLabel;
+    ltLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    ltLabel->setStyleSheet("border: 1px groove green;");
+    rtLabel = new QLabel;
+    rtLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    rtLabel->setStyleSheet("border: 1px groove green;");
+    lbLabel = new QLabel;
+    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    lbLabel->setStyleSheet("border: 1px groove green;");
+    rbLabel = new QLabel;
+    lbLabel->resize(quarterScreenWidth,quarterScreenHeight);
+    rbLabel->setStyleSheet("border: 1px groove blue;");
+}
+
+/**
+ * @brief VedioMonitoringSystem::createCompartmentButtom 创建车厢按钮视图
+ */
+void VedioMonitoringSystem::createCompartmentButtom(){
+    carBtnWidget = new QWidget(this);
+    carBtnWidget->setAttribute(Qt::WA_TranslucentBackground,true);
+    carHeadBtn = new SystemPushButton(carBtnWidget);
+    carHeadBtn->setText("车头");
+    carHeadBtn->setGeometry(0,0,126,50);
+
+
+    oneCarBtn = new SystemPushButton(carBtnWidget);
+    oneCarBtn->setText("一车厢");
+    oneCarBtn->setGeometry(128,0,126,50);
+
+
+    twoCarBtn = new SystemPushButton(carBtnWidget);
+    twoCarBtn->setText("二车厢");
+    twoCarBtn->setGeometry(256,0,126,50);
+
+
+    threeCarBtn = new SystemPushButton(carBtnWidget);
+    threeCarBtn->setText("三车厢");
+    threeCarBtn->setGeometry(384,0,126,50);
+
+
+    rear = new SystemPushButton(carBtnWidget);
+    rear->setText("车尾");
+    rear->setGeometry(512,0,126,50);
+
+
+    carBtnWidget->setGeometry(192,globalHeightSize-10-50,640,50);
+    carBtnWidget->setVisible(false);
+}
+/**
+ * @brief VedioMonitoringSystem::createOneMeun 创建一级菜单
+ */
+void VedioMonitoringSystem::createOneMeun(){
+    oneMenuWidget = new QWidget(this);
+    // 设置透明度
+    oneMenuWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+
+    loginBtn = new SystemPushButton(oneMenuWidget);
+    loginBtn->setText(tr("登录"));
+    loginBtn->setGeometry(0,0,80,50);
+    connect(loginBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
+
+    roundRobinBtn = new SystemPushButton(oneMenuWidget);
+    roundRobinBtn->setText(tr("轮询"));
+    roundRobinBtn->setGeometry(0,60,80,50);
+
+    carBtn = new SystemPushButton(oneMenuWidget);
+    carBtn->setText(tr("车厢"));
+    carBtn->setGeometry(0,120,80,50);
+    connect(carBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
+
+    replayBtn = new SystemPushButton(oneMenuWidget);
+    replayBtn->setText(tr("回放"));
+    replayBtn->setGeometry(0,180,80,50);
+
+    oneMenuWidget->setGeometry(10,globalHeightSize-10-50-240,80,240);
+    oneMenuWidget->setVisible(false);
+}
+
+/**
+ * @brief VedioMonitoringSystem::createTwoMenu 创建二级菜单
+ */
+void VedioMonitoringSystem::createTwoMenu(){
+    twoMenuWidget = new QWidget(this);
+    // 设置透明度
+    twoMenuWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+    systemStatus = new SystemPushButton(twoMenuWidget);
+    systemStatus->setText("系统状态");
+    systemStatus->setGeometry(0,0,80,50);
+
+    hardDriveCapacity = new SystemPushButton(twoMenuWidget);
+    hardDriveCapacity->setText("硬盘容量");
+    hardDriveCapacity->setGeometry(0,60,80,50);
+
+    carHeadOrReal = new SystemPushButton(twoMenuWidget);
+    carHeadOrReal->setText("车头/车尾");
+    carHeadOrReal->setGeometry(0,120,80,50);
+
+    faultFuidanceBtn = new SystemPushButton(twoMenuWidget);
+    faultFuidanceBtn->setText(tr("故障指导"));
+    faultFuidanceBtn->setGeometry(0,180,80,50);
+
+    setBtn = new SystemPushButton(twoMenuWidget);
+    setBtn->setText(tr("设置"));
+    setBtn->setGeometry(0,240,80,50);
+
+    quit = new SystemPushButton(twoMenuWidget);
+    quit->setText("退出");
+    quit->setGeometry(0,300,80,50);
+    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::close);
+
+    logoutBtn = new SystemPushButton(twoMenuWidget);
+    logoutBtn->setText(tr("注销"));
+    logoutBtn->setGeometry(0,360,80,50);
+    connect(logoutBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
+
+    twoMenuWidget->setGeometry(10,globalHeightSize-10-50-240-420, 80, 420);
+    twoMenuWidget->setVisible(false);
+}
+
+/**
+ * @brief VedioMonitoringSystem::createUi 创建登录框
+ */
+void VedioMonitoringSystem::createUi(){
+    QFont loginLabelFont("SimHei",32);
+    loginLabelFont.setPixelSize(32);
+    loginLabelFont.setBold(true);
+    loginLabelFont.setFamily("SimHei");
+    loginLabel = new QLabel("登录",loginDialog);
+    loginLabel->setFont(loginLabelFont);
+    loginLabel->setGeometry(0,5,480,60);
+    loginLabel->setAlignment(Qt::AlignCenter);
+    loginLabel->setStyleSheet("border: 0px groove red;");
+    enterPwdLabel = new QLabel("请输入密码：",loginDialog);
+    QFont enterPwdLabelFont("SimHei",20);
+    enterPwdLabelFont.setPixelSize(20);
+    enterPwdLabel->setFont(enterPwdLabelFont);
+    enterPwdLabel->setStyleSheet("border: 0px groove green");
+    enterPwdLabel->setAlignment(Qt::AlignCenter);
+    enterPwdLabel->setGeometry(0,65,140,40);
+    inputBox = new QLineEdit(loginDialog);
+    inputBox->setEchoMode(QLineEdit::Password);
+    inputBox->setMaxLength(6);
+    inputBox->setGeometry(140,65,330,40);
+    inputBox->setFont(enterPwdLabelFont);
+    QFont keyBoardFont("SimHei",26);
+    keyBoardFont.setPixelSize(26);
+
+
+    oneBtn = new LoginButton;
+    oneBtn->setText("1");
+    oneBtn->setParent(loginDialog);
+    oneBtn->setFont(keyBoardFont);
+    oneBtn->setGeometry(10,125,152,50);
+    connect(oneBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    twoBtn = new LoginButton;
+    twoBtn->setText("2");
+    twoBtn->setParent(loginDialog);
+    twoBtn->setFont(keyBoardFont);
+    twoBtn->setGeometry(164,125,152,50);
+    connect(twoBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    threeBtn = new LoginButton;
+    threeBtn->setText("3");
+    threeBtn->setParent(loginDialog);
+    threeBtn->setFont(keyBoardFont);
+    threeBtn->setGeometry(318,125,152,50);
+    connect(threeBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    fourBtn = new LoginButton;
+    fourBtn->setText("4");
+    fourBtn->setParent(loginDialog);
+    fourBtn->setFont(keyBoardFont);
+    fourBtn->setGeometry(10,177,152,50);
+    connect(fourBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    fiveBtn = new LoginButton;
+    fiveBtn->setText("5");
+    fiveBtn->setParent(loginDialog);
+    fiveBtn->setFont(keyBoardFont);
+    fiveBtn->setGeometry(164,177,152,50);
+    connect(fiveBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    sixBtn = new LoginButton;
+    sixBtn->setText("6");
+    sixBtn->setParent(loginDialog);
+    sixBtn->setFont(keyBoardFont);
+    sixBtn->setGeometry(318,177,152,50);
+    connect(sixBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    servenBtn = new LoginButton;
+    servenBtn->setText("7");
+    servenBtn->setParent(loginDialog);
+    servenBtn->setFont(keyBoardFont);
+    servenBtn->setGeometry(10,229,152,50);
+    connect(servenBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    eightBtn = new LoginButton;
+    eightBtn->setText("8");
+    eightBtn->setParent(loginDialog);
+    eightBtn->setFont(keyBoardFont);
+    eightBtn->setGeometry(164,229,152,50);
+    connect(eightBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    nineBtn = new LoginButton;
+    nineBtn->setText("9");
+    nineBtn->setParent(loginDialog);
+    nineBtn->setFont(keyBoardFont);
+    nineBtn->setGeometry(318,229,152,50);
+    connect(nineBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    spaceBtn = new LoginButton;
+    spaceBtn->setText(" ");
+    spaceBtn->setParent(loginDialog);
+    spaceBtn->setFont(keyBoardFont);
+    spaceBtn->setEnabled(false);
+    spaceBtn->setGeometry(10,281,152,50);
+
+    zeroBtn = new LoginButton;
+    zeroBtn->setText("0");
+    zeroBtn->setParent(loginDialog);
+    zeroBtn->setFont(keyBoardFont);
+    zeroBtn->setGeometry(164,281,152,50);
+    connect(zeroBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    errorBtn = new LoginButton;
+    errorBtn->setText("<");
+    errorBtn->setParent(loginDialog);
+    errorBtn->setFont(keyBoardFont);
+    errorBtn->setGeometry(318,281,152,50);
+    connect(errorBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::getInputPwd);
+
+    determineBtn = new SystemPushButton;
+    determineBtn->setText("确定");
+    determineBtn->setParent(loginDialog);
+    determineBtn->setFont(enterPwdLabelFont);
+    determineBtn->setGeometry(30,345,160,50);
+    connect(determineBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::determineLoginEvent);
+
+    cancelBtn = new SystemPushButton;
+    cancelBtn->setText("取消");
+    cancelBtn->setParent(loginDialog);
+    cancelBtn->setFont(enterPwdLabelFont);
+    cancelBtn->setGeometry(290,345,160,50);
+    connect(cancelBtn,&QPushButton::clicked,this,&VedioMonitoringSystem::cancalLoginEvent);
+
 }
 

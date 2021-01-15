@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QGridLayout>
-#include "qpushbutton.h"
 #include <QHBoxLayout>
 #include <windows.h>
 #include <HCNetSDK.h>
@@ -13,6 +12,8 @@
 #include "qopenglwidget.h"
 #include "qcombobox.h"
 #include "logindialog.h"
+#include "systempushbutton.h"
+#include "loginbutton.h"
 
 class VedioMonitoringSystem : public QWidget
 {
@@ -44,9 +45,21 @@ public:
      */
     void loadVeido();
 
+    /**
+     * @brief loadCameraUtils 摄像头获取工具类
+     */
     void loadCameraUtils();
 
+    /**
+     * @brief setInputPwd 设置密码
+     * @param strPwd 输入字符
+     */
     void setInputPwd(QString strPwd);
+
+    /**
+     * @brief createTwoMenu 创建二级菜单
+     */
+    void createTwoMenu();
 
 public slots:
     /**
@@ -118,7 +131,7 @@ private:
     /**
      * @brief mainbutton 主菜单按钮
      */
-    QPushButton *mainbutton;
+    SystemPushButton *mainbutton;
 
     /**
      * @brief carBtnWidget 显示车厢按钮的窗口
@@ -129,31 +142,47 @@ private:
      * @brief Rear 车尾按钮
      */
     QWidget *carBtnWidget;
-    QPushButton *carHeadBtn;
-    QPushButton *oneCarBtn;
-    QPushButton *twoCarBtn;
-    QPushButton *threeCarBtn;
-    QPushButton *rear;
+    SystemPushButton *carHeadBtn;
+    SystemPushButton *oneCarBtn;
+    SystemPushButton *twoCarBtn;
+    SystemPushButton *threeCarBtn;
+    SystemPushButton *rear;
     QHBoxLayout *carBtnLayout;
 
     /**
      * @brief oneMenuWidget 显示一级菜单的窗口
      * @brief loginBtn 登录
-     * @brief logoutBtn 注销
      * @brief carBtn 车厢
      * @brief roundRobinBtn 轮巡
      * @brief replayBtn 回放
-     * @brief setBtn 设置
      * @brief faultFuidanceBtn 故障指导
      */
     QWidget *oneMenuWidget;
-    QPushButton *loginBtn;
-    QPushButton *logoutBtn;
-    QPushButton *carBtn;
-    QPushButton *roundRobinBtn;
-    QPushButton *replayBtn;
-    QPushButton *setBtn;
-    QPushButton *faultFuidanceBtn;
+    SystemPushButton *loginBtn;
+    SystemPushButton *carBtn;
+    SystemPushButton *roundRobinBtn;
+    SystemPushButton *replayBtn;
+
+    /**
+     * @brief twoMenuWidget 显示二级菜单的窗口
+     * @brief timing 校时
+     * @brief systemStatus 系统状态
+     * @brief carHeadOrReal 车头/车尾
+     * @brief hardDriveCapacity 硬盘容量
+     * @brief quit 退出
+     * @brief logoutBtn 注销
+     * @brief setBtn 设置
+     * @brief faultFuidanceBtn 故障指导
+     */
+    QWidget *twoMenuWidget;
+    SystemPushButton *timing;
+    SystemPushButton *systemStatus;
+    SystemPushButton *carHeadOrReal;
+    SystemPushButton *hardDriveCapacity;
+    SystemPushButton *quit;
+    SystemPushButton *logoutBtn;
+    SystemPushButton *setBtn;
+    SystemPushButton *faultFuidanceBtn;
 
     /**
      * @brief loginDialog 登录框对象
@@ -180,20 +209,20 @@ private:
     QLabel *loginLabel;
     QLabel *enterPwdLabel;
     QLineEdit *inputBox;
-    QPushButton *zeroBtn;
-    QPushButton *oneBtn;
-    QPushButton *twoBtn;
-    QPushButton *threeBtn;
-    QPushButton *fourBtn;
-    QPushButton *fiveBtn;
-    QPushButton *sixBtn;
-    QPushButton *servenBtn;
-    QPushButton *eightBtn;
-    QPushButton *nineBtn;
-    QPushButton *errorBtn;
-    QPushButton *determineBtn;
-    QPushButton *cancelBtn;
-    QPushButton *spaceBtn;
+    LoginButton *zeroBtn;
+    LoginButton *oneBtn;
+    LoginButton *twoBtn;
+    LoginButton *threeBtn;
+    LoginButton *fourBtn;
+    LoginButton *fiveBtn;
+    LoginButton *sixBtn;
+    LoginButton *servenBtn;
+    LoginButton *eightBtn;
+    LoginButton *nineBtn;
+    LoginButton *errorBtn;
+    LoginButton *spaceBtn;
+    SystemPushButton *determineBtn;
+    SystemPushButton *cancelBtn;
 
 };
 #endif // VEDIOMONITORINGSYSTEM_H
