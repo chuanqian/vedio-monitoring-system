@@ -16,8 +16,6 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
 
     resize(globalWidthSize,globalHeightSize);
     setWindowTitle("视频监控系统");
-    setAttribute(Qt::WA_DeleteOnClose,true);
-
     layout = new QGridLayout;
     createFourView();
     //添加四个显示视频窗体
@@ -350,7 +348,7 @@ void VedioMonitoringSystem::createTwoMenu(){
     quit = new SystemPushButton(twoMenuWidget);
     quit->setText("退出");
     quit->setGeometry(0,300,80,50);
-    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
+    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::close);
 
     logoutBtn = new SystemPushButton(twoMenuWidget);
     logoutBtn->setText(tr("注销"));
