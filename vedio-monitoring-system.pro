@@ -29,8 +29,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    buttondanger.cpp \
+    buttoninfo.cpp \
+    buttonwarning.cpp \
     loginbutton.cpp \
-    logindialog.cpp \
     main.cpp \
     systempushbutton.cpp \
     tvreal.cpp \
@@ -38,8 +40,10 @@ SOURCES += \
 
 HEADERS += \
     StructType.h \
+    buttondanger.h \
+    buttoninfo.h \
+    buttonwarning.h \
     loginbutton.h \
-    logindialog.h \
     systempushbutton.h \
     tvreal.h \
     vediomonitoringsystem.h

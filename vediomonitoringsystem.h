@@ -11,7 +11,6 @@
 #include "qlabel.h"
 #include "qopenglwidget.h"
 #include "qcombobox.h"
-#include "logindialog.h"
 #include "systempushbutton.h"
 #include "loginbutton.h"
 

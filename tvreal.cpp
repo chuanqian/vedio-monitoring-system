@@ -18,7 +18,6 @@ void CTVReal::initialize(InitializeCameraParamter initializeCameraParamter){
     NET_DVR_SetConnectTime(initializeCameraParamter.reconnectionWaitTime, initializeCameraParamter.reconnectionNumber);
     NET_DVR_SetReconnect(initializeCameraParamter.reconnectionTimeInterval, initializeCameraParamter.whetherToReconnection);
     NET_DVR_SetExceptionCallBack_V30(0, NULL,NULL, NULL);
-    qDebug()<<"初始化成功";
 }
 
 
@@ -38,17 +37,15 @@ LONG CTVReal::LoginFoarmt(LoginParamter loginParamter){
     strcpy(struLoginInfo.sPassword, loginParamter.password); //设备登录密码
 
     //设备信息, 输出参数
-    NET_DVR_DEVICEINFO_V40 struDeviceInfoV40 = { };
+    NET_DVR_DEVICEINFO_V40 struDeviceInfoV40 = {};
 
     lUserID = NET_DVR_Login_V40(&struLoginInfo, &struDeviceInfoV40);
     if (lUserID < 0)
     {
         printf("Login failed, error code: %d\n", (int)NET_DVR_GetLastError());
         NET_DVR_Cleanup();
-        qDebug()<<"登录失败";
         return -1;
     }
-    qDebug()<<"登录成功";
     return lUserID;
 }
 
@@ -61,15 +58,14 @@ DWORD CTVReal::StartPlay(StartPlayParamter startPlayParamter){
     struPlayInfo.dwLinkMode = startPlayParamter.connectionWay;       //0- TCP方式，1- UDP方式，2- 多播方式，3- RTP方式，4-RTP/RTSP，5-RSTP/HTTP
     struPlayInfo.bBlocked = 0;       //0- 非阻塞取流，1- 阻塞取流
 
-    long lRealPlayHandle = NET_DVR_RealPlay_V40(startPlayParamter.loginId, &struPlayInfo, NULL, NULL);
+    long lRealPlayHandle = NET_DVR_RealPlay_V40(startPlayParamter.loginId, &struPlayInfo, nullptr, nullptr);
     if (lRealPlayHandle < 0)
     {
         DWORD err = NET_DVR_GetLastError();
-        qDebug()<<"播放失败" << err;
-        return err;
+        qDebug() << "err: " << err;
+        return lRealPlayHandle;
     }
     equipmentList.push_back(lRealPlayHandle);
-    qDebug()<<"播放成功";
     return lRealPlayHandle;
 }
 

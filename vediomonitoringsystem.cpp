@@ -5,10 +5,10 @@
 #include "QDebug"
 #include "tvreal.h"
 #include "qcombobox.h"
-#include "logindialog.h"
 #include "qdialog.h"
 #include "qmessagebox.h"
 #include "qapplication.h"
+#include "qlineedit.h"
 
 VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     : QWidget(parent)
@@ -40,14 +40,14 @@ VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
      */
     connect(mainbutton,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideOneMenu);
 
-//    /**
-//     * @brief loadCameraUtils 摄像头工具类
-//     */
-//    loadCameraUtils();
-//    /**
-//     * @brief loadVeido 加载视频
-//     */
-//    loadVeido();
+    /**
+     * @brief loadCameraUtils 摄像头工具类
+     */
+    loadCameraUtils();
+    /**
+     * @brief loadVeido 加载视频
+     */
+    loadVeido();
 
 }
 
@@ -149,70 +149,93 @@ void VedioMonitoringSystem::loadVeido(){
     ltloginParamter.userName = const_cast<char*>("admin");
     ltloginParamter.password = const_cast<char*>("Aa108852");
     long ltLoginId = ctvReal->LoginFoarmt(ltloginParamter);
-    StartPlayParamter ltStartPlayParamter = {};
-    ltStartPlayParamter.loginId = ltLoginId;
-    ltStartPlayParamter.channelNumber = 1;
-    ltStartPlayParamter.streamNumber = 1;
-    ltStartPlayParamter.connectionWay = 5;
-    ltStartPlayParamter.HandleNumber = (HWND) ltLabel->winId();
-    DWORD ltReturnId = ctvReal->StartPlay(ltStartPlayParamter);
-    qDebug() << "打印:"<< ltReturnId;
+    if(ltLoginId < 0){
+        ltLabel->setText("播放失败");
+        ltLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        rtLabel->setText("播放失败");
+        rtLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        lbLabel->setText("播放失败");
+        lbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        rbLabel->setText("播放失败");
+        rbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+    }else{
+        StartPlayParamter ltStartPlayParamter = {};
+        ltStartPlayParamter.loginId = ltLoginId;
+        ltStartPlayParamter.channelNumber = 1;
+        ltStartPlayParamter.streamNumber = 1;
+        ltStartPlayParamter.connectionWay = 5;
+        ltStartPlayParamter.HandleNumber = (HWND) ltLabel->winId();
+        DWORD ltReturnId = ctvReal->StartPlay(ltStartPlayParamter);
+        if(ltReturnId < 0){
+            ltLabel->setText("播放失败");
+            ltLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        }
 
-    LoginParamter rtloginParamter = {};
-    rtloginParamter.ipAddress = const_cast<char*>("192.168.112.203");
-    rtloginParamter.port = 8000;
-    rtloginParamter.userName = const_cast<char*>("admin");
-    rtloginParamter.password = const_cast<char*>("Aa108852");
-    long rtUserId = ctvReal->LoginFoarmt(rtloginParamter);
-    StartPlayParamter rtStartPlayParamter = {};
-    rtStartPlayParamter.loginId = rtUserId;
-    rtStartPlayParamter.channelNumber = 1;
-    rtStartPlayParamter.streamNumber = 0;
-    rtStartPlayParamter.connectionWay = 5;
-    rtStartPlayParamter.HandleNumber = (HWND) rtLabel->winId();
-    DWORD rtReturnId = ctvReal->StartPlay(rtStartPlayParamter);
-    qDebug() << "打印:"<< rtReturnId;
+        LoginParamter rtloginParamter = {};
+        rtloginParamter.ipAddress = const_cast<char*>("192.168.112.203");
+        rtloginParamter.port = 8000;
+        rtloginParamter.userName = const_cast<char*>("admin");
+        rtloginParamter.password = const_cast<char*>("Aa108852");
+        long rtUserId = ctvReal->LoginFoarmt(rtloginParamter);
+        StartPlayParamter rtStartPlayParamter = {};
+        rtStartPlayParamter.loginId = rtUserId;
+        rtStartPlayParamter.channelNumber = 1;
+        rtStartPlayParamter.streamNumber = 0;
+        rtStartPlayParamter.connectionWay = 5;
+        rtStartPlayParamter.HandleNumber = (HWND) rtLabel->winId();
+        DWORD rtReturnId = ctvReal->StartPlay(rtStartPlayParamter);
+        if(rtReturnId < 0){
+            rtLabel->setText("播放失败");
+            rtLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        }
 
-    LoginParamter lbloginParamter = {};
-    lbloginParamter.ipAddress = const_cast<char*>("192.168.112.204");
-    lbloginParamter.port = 8000;
-    lbloginParamter.userName = const_cast<char*>("admin");
-    lbloginParamter.password = const_cast<char*>("Aa108852");
-    long lbLoginId = ctvReal->LoginFoarmt(lbloginParamter);
-    StartPlayParamter lbStartPlayParamter = {};
-    lbStartPlayParamter.loginId = lbLoginId;
-    lbStartPlayParamter.channelNumber = 1;
-    lbStartPlayParamter.streamNumber = 0;
-    lbStartPlayParamter.connectionWay = 5;
-    lbStartPlayParamter.HandleNumber = (HWND) lbLabel->winId();
-    DWORD lbReturnId = ctvReal->StartPlay(lbStartPlayParamter);
-    qDebug() << "打印:"<< lbReturnId;
+        LoginParamter lbloginParamter = {};
+        lbloginParamter.ipAddress = const_cast<char*>("192.168.112.204");
+        lbloginParamter.port = 8000;
+        lbloginParamter.userName = const_cast<char*>("admin");
+        lbloginParamter.password = const_cast<char*>("Aa108852");
+        long lbLoginId = ctvReal->LoginFoarmt(lbloginParamter);
+        StartPlayParamter lbStartPlayParamter = {};
+        lbStartPlayParamter.loginId = lbLoginId;
+        lbStartPlayParamter.channelNumber = 1;
+        lbStartPlayParamter.streamNumber = 0;
+        lbStartPlayParamter.connectionWay = 5;
+        lbStartPlayParamter.HandleNumber = (HWND) lbLabel->winId();
+        DWORD lbReturnId = ctvReal->StartPlay(lbStartPlayParamter);
+        if(lbReturnId < 0){
+            lbLabel->setText("播放失败");
+            lbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        }
 
 
 
-    LoginParamter rbloginParamter = {};
-    rbloginParamter.ipAddress = const_cast<char*>("192.168.112.202");
-    rbloginParamter.port = 8000;
-    rbloginParamter.userName = const_cast<char*>("admin");
-    rbloginParamter.password = const_cast<char*>("Aa108852");
-    long rbUserId = ctvReal->LoginFoarmt(rbloginParamter);
-    StartPlayParamter rbStartPlayParamter = {};
-    rbStartPlayParamter.loginId = rbUserId;
-    rbStartPlayParamter.channelNumber = 1;
-    rbStartPlayParamter.streamNumber = 1;
-    rbStartPlayParamter.connectionWay = 5;
-    rbStartPlayParamter.HandleNumber = (HWND) rbLabel->winId();
-    DWORD rbReturnId = ctvReal->StartPlay(rbStartPlayParamter);
-    qDebug() << "打印:"<< rbReturnId;
+        LoginParamter rbloginParamter = {};
+        rbloginParamter.ipAddress = const_cast<char*>("192.168.112.202");
+        rbloginParamter.port = 8000;
+        rbloginParamter.userName = const_cast<char*>("admin");
+        rbloginParamter.password = const_cast<char*>("Aa108852");
+        long rbUserId = ctvReal->LoginFoarmt(rbloginParamter);
+        StartPlayParamter rbStartPlayParamter = {};
+        rbStartPlayParamter.loginId = rbUserId;
+        rbStartPlayParamter.channelNumber = 1;
+        rbStartPlayParamter.streamNumber = 1;
+        rbStartPlayParamter.connectionWay = 5;
+        rbStartPlayParamter.HandleNumber = (HWND) rbLabel->winId();
+        DWORD rbReturnId = ctvReal->StartPlay(rbStartPlayParamter);
+        if(rbReturnId < 0){
+            rbLabel->setText("播放失败");
+            rbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        }
+    }
 }
 
 void VedioMonitoringSystem::loadCameraUtils(){
     ctvReal = new CTVReal();
     InitializeCameraParamter initializeCameraParamter = {};
-    initializeCameraParamter.reconnectionWaitTime = 300000;
-    initializeCameraParamter.reconnectionNumber = 2;
-    initializeCameraParamter.whetherToReconnection = false;
-    initializeCameraParamter.reconnectionTimeInterval = 20000;
+    initializeCameraParamter.reconnectionWaitTime = 2000;
+    initializeCameraParamter.reconnectionNumber = 1;
+    initializeCameraParamter.whetherToReconnection = true;
+    initializeCameraParamter.reconnectionTimeInterval = 10000;
     ctvReal->initialize(initializeCameraParamter);
 }
 
@@ -327,7 +350,7 @@ void VedioMonitoringSystem::createTwoMenu(){
     quit = new SystemPushButton(twoMenuWidget);
     quit->setText("退出");
     quit->setGeometry(0,300,80,50);
-    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::close);
+    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
 
     logoutBtn = new SystemPushButton(twoMenuWidget);
     logoutBtn->setText(tr("注销"));
