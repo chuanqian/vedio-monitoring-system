@@ -9,6 +9,8 @@
 #include "qmessagebox.h"
 #include "qapplication.h"
 #include "qlineedit.h"
+#include "qstringlist.h"
+#include "qfile.h"
 
 VedioMonitoringSystem::VedioMonitoringSystem(QWidget *parent)
     : QWidget(parent)
@@ -85,7 +87,7 @@ void VedioMonitoringSystem::showHideCar(){
         }
     }else if(oneEventBtnText=="退出"){
         if(QMessageBox::Ok == QMessageBox::question(this,"是否退出","确认退出系统？",QMessageBox::Ok | QMessageBox::No,QMessageBox::Ok)){
-
+            this->close();
         }
     }
 
@@ -100,7 +102,7 @@ void VedioMonitoringSystem::getInputPwd(){
 }
 
 void VedioMonitoringSystem::setInputPwd(QString strPwd){
-    try {
+   try {
         QString inputText = inputBox->text();
         if(inputText != nullptr){
             if(strPwd!="<"){
@@ -121,7 +123,22 @@ void VedioMonitoringSystem::cancalLoginEvent(){
 }
 
 void VedioMonitoringSystem::determineLoginEvent(){
-    if(inputBox->text() == "123456"){
+    QString str = "123456";
+    QFile data(":/file/password.txt");
+    if(data.open(QFile::ReadOnly)){
+        QTextStream in(&data);
+        str = in.readLine();
+        qDebug() << str;
+    }
+    data.close();
+    QFile data1("./test.txt");
+    if (data1.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+        QTextStream out(&data1);
+        out << str;
+    }else{
+        qDebug() << "打开写入文件失败";
+    }
+    if(inputBox->text() == str){
         loginBtn->setText("已登录");
         loginBtnFlag = true;
         createTwoMenu();
@@ -149,13 +166,13 @@ void VedioMonitoringSystem::loadVeido(){
     long ltLoginId = ctvReal->LoginFoarmt(ltloginParamter);
     if(ltLoginId < 0){
         ltLabel->setText("播放失败");
-        ltLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        ltLabel->setStyleSheet("QLabel{background-color: rgb(0,0,0)}");
         rtLabel->setText("播放失败");
-        rtLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        rtLabel->setStyleSheet("QLabel{background-color: rgb(0,0,0)}");
         lbLabel->setText("播放失败");
-        lbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        lbLabel->setStyleSheet("QLabel{background-color: rgb(0,0,0)}");
         rbLabel->setText("播放失败");
-        rbLabel->setStyleSheet("QLabel{background-color: rgb(200,101,102)}");
+        rbLabel->setStyleSheet("QLabel{background-color: rgb(0,0,0)}");
     }else{
         StartPlayParamter ltStartPlayParamter = {};
         ltStartPlayParamter.loginId = ltLoginId;
@@ -348,7 +365,7 @@ void VedioMonitoringSystem::createTwoMenu(){
     quit = new SystemPushButton(twoMenuWidget);
     quit->setText("退出");
     quit->setGeometry(0,300,80,50);
-    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::close);
+    connect(quit,&QPushButton::clicked,this,&VedioMonitoringSystem::showHideCar);
 
     logoutBtn = new SystemPushButton(twoMenuWidget);
     logoutBtn->setText(tr("注销"));
