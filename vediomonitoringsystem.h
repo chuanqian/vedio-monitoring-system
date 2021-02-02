@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QHBoxLayout>
-#include <windows.h>
 #include <HCNetSDK.h>
 #include <plaympeg4.h>
 #include "tvreal.h"
